@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorteio de Times - Condomínio Panamby</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <img src="/assets/img/logo-panamby.jpeg" alt="Condomínio Panamby Logo" class="logo">
+            </div>
+            <h1>Sorteio de Times - Panamby F.C.</h1>
+            <p class="subtitle">Panamby F.C.</p>
+        </header>
+
+        <div class="tabs">
+            <div class="tab-header">
+                <button class="tab-button active" data-tab="teams">Times</button>
+                <button class="tab-button" data-tab="players">Jogadores</button>
+            </div>
+
+            <div class="tab-content">
+                <!-- Times Tab -->
+                <div class="tab-pane active" id="teams-tab">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Gerador de Times Equilibrados</h2>
+                            <p>Gere times equilibrados baseados nas notas dos jogadores</p>
+                        </div>
+                        <div class="card-content">
+                            <div id="warning-container"></div>
+                            
+                            <div class="button-group">
+                                <button id="generate-teams-btn" class="primary-button">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                    Gerar Times
+                                </button>
+                                <button id="clear-teams-btn" class="outline-button" style="display: none;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="teams-container" class="teams-grid"></div>
+                </div>
+
+                <!-- Jogadores Tab -->
+                <div class="tab-pane" id="players-tab">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Adicionar Jogador</h2>
+                            <p>Cadastre um novo jogador com nome e nota de habilidade</p>
+                        </div>
+                        <div class="card-content">
+                            <div class="form-group">
+                                <label for="player-name">Nome do Jogador</label>
+                                <input type="text" id="player-name" placeholder="Digite o nome do jogador">
+                            </div>
+                            
+                            <div class="form-group">
+                                <div class="rating-header">
+                                    <label for="player-rating">Nota do Jogador: <span id="rating-value">5</span></label>
+                                    <span class="rating-range">1-10</span>
+                                </div>
+                                <input type="range" id="player-rating" min="1" max="10" step="1" value="5">
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button id="add-player-btn" class="primary-button full-width">Adicionar Jogador</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Jogadores Cadastrados</h2>
+                            <p id="player-count">0 jogadores disponíveis para sorteio</p>
+                        </div>
+                        <div class="card-content">
+                            <div id="players-table-container">
+                                <table id="players-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Nome</th>
+                                            <th class="text-center">Nota</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="players-list">
+                                        <!-- Players will be added here dynamically -->
+                                    </tbody>
+                                </table>
+                                <p id="no-players-message" class="text-center muted">Nenhum jogador cadastrado</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">
+        <div class="toast-content">
+            <div class="toast-title">Notificação</div>
+            <div class="toast-message">Mensagem de notificação</div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

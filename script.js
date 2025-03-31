@@ -437,7 +437,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 { id: "10", name: "Edilson", rating: 5 }, // nao sei
                 { id: "11", name: "Vini", rating: 6 }, 
                 { id: "12", name: "Douglas", rating: 8 },
-                { id: "13", name: "Diego Depay", rating: 9 },
+                { id: "13", name: "Diego Mariano", rating: 9 },
                 { id: "14", name: "Enzo", rating: 7 },
                 { id: "15", name: "Wesley", rating: 8.5 },
                 { id: "16", name: "Kaue", rating: 7 },

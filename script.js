@@ -449,7 +449,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 { id: "22", name: "Diego Saouda", rating: 7 },
                 { id: "23", name: "Claudinei", rating: 5 },
                 { id: "24", name: "Matheus", rating: 7 },
-                { id: "25", name: "Claúdio", rating: 10 },
+                { id: "25", name: "Claúdio", rating: 4 },
             ];
             savePlayers();
         }

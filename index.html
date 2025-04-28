@@ -10,10 +10,10 @@
     <div class="container">
         <header>
             <div class="logo-container">
-                <img src="assets/img/logo-panamby.jpeg" alt="Condomínio Panamby Logo" class="logo">
+                <img src="logo-panamby.jpeg" alt="Condomínio Panamby Logo" class="logo">
             </div>
-            <h1>Sorteio de Times - Panamby F.C.</h1>
-            <p class="subtitle">Panamby F.C.</p>
+            <h1>Sorteio de Times de Futebol</h1>
+            <p class="subtitle">Condomínio Panamby</p>
         </header>
 
         <div class="tabs">
@@ -25,6 +25,26 @@
             <div class="tab-content">
                 <!-- Times Tab -->
                 <div class="tab-pane active" id="teams-tab">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Selecionar Jogadores para o Sorteio</h2>
+                            <p>Escolha quais jogadores participarão do sorteio de times</p>
+                        </div>
+                        <div class="card-content">
+                            <div class="selection-header">
+                                <div id="selected-count" class="selected-count">0 jogadores selecionados</div>
+                                <div class="selection-actions">
+                                    <button id="select-all-btn" class="text-button">Selecionar Todos</button>
+                                    <button id="deselect-all-btn" class="text-button">Desmarcar Todos</button>
+                                </div>
+                            </div>
+                            
+                            <div id="player-selection-list" class="player-selection-list">
+                                <!-- Player checkboxes will be added here dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="card">
                         <div class="card-header">
                             <h2>Gerador de Times Equilibrados</h2>
@@ -76,8 +96,16 @@
 
                     <div class="card">
                         <div class="card-header">
-                            <h2>Jogadores Cadastrados</h2>
-                            <p id="player-count">0 jogadores disponíveis para sorteio</p>
+                            <div class="header-with-actions">
+                                <div>
+                                    <h2>Jogadores Cadastrados</h2>
+                                    <p id="player-count">0 jogadores disponíveis para sorteio</p>
+                                </div>
+                                <button id="reset-players-btn" class="secondary-button">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v6h6"></path><path d="M21 12A9 9 0 0 0 6 5.3L3 8"></path><path d="M21 22v-6h-6"></path><path d="M3 12a9 9 0 0 0 15 6.7l3-2.7"></path></svg>
+                                    Resetar Lista
+                                </button>
+                            </div>
                         </div>
                         <div class="card-content">
                             <div id="players-table-container">
@@ -106,6 +134,22 @@
         <div class="toast-content">
             <div class="toast-title">Notificação</div>
             <div class="toast-message">Mensagem de notificação</div>
+        </div>
+    </div>
+
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmação</h3>
+                <button id="close-modal-btn" class="close-button">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja resetar a lista de jogadores? Todos os jogadores atuais serão substituídos pelos jogadores padrão.</p>
+            </div>
+            <div class="modal-footer">
+                <button id="cancel-reset-btn" class="outline-button">Cancelar</button>
+                <button id="confirm-reset-btn" class="primary-button">Confirmar</button>
+            </div>
         </div>
     </div>
 

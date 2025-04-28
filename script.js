@@ -14,15 +14,61 @@ document.addEventListener('DOMContentLoaded', function() {
     const teamsContainer = document.getElementById('teams-container');
     const warningContainer = document.getElementById('warning-container');
     const toast = document.getElementById('toast');
+    const resetPlayersBtn = document.getElementById('reset-players-btn');
+    const confirmModal = document.getElementById('confirm-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const cancelResetBtn = document.getElementById('cancel-reset-btn');
+    const confirmResetBtn = document.getElementById('confirm-reset-btn');
+    const playerSelectionList = document.getElementById('player-selection-list');
+    const selectAllBtn = document.getElementById('select-all-btn');
+    const deselectAllBtn = document.getElementById('deselect-all-btn');
+    const selectedCountDisplay = document.getElementById('selected-count');
 
     // State
     let players = [];
     let teams = [];
+    let selectedPlayerIds = [];
+
+    // Default players data
+    const defaultPlayers = [
+        { id: "1", name: "Jhonata", rating: 5 },
+                { id: "2", name: "Danilo", rating: 6 },
+                { id: "3", name: "Jack", rating: 6 },
+                { id: "4", name: "Bruno", rating: 4 },
+                { id: "5", name: "Lucas Ferreira", rating: 5 },
+                { id: "6", name: "Tio Nelson", rating: 4 },
+                { id: "7", name: "Luizão", rating: 5 },
+                { id: "8", name: "Gabriel", rating: 9 },
+                { id: "9", name: "Haroldo", rating: 6 },
+                { id: "10", name: "Edilson", rating: 5 }, // nao sei
+                { id: "11", name: "Vini", rating: 6 }, 
+                { id: "12", name: "Douglas", rating: 8 },
+                { id: "13", name: "Diego Mariano", rating: 9 },
+                { id: "14", name: "Enzo", rating: 7 },
+                { id: "15", name: "Wesley", rating: 8.5 },
+                { id: "16", name: "Kaue", rating: 7 },
+                { id: "17", name: "Leo", rating: 6 },
+                { id: "18", name: "Valdinei", rating: 9 },
+                { id: "19", name: "Felipe Dias", rating: 7 },
+                { id: "20", name: "Samurai", rating: 9 },
+                { id: "21", name: "Murilo", rating: 8.5 },
+                { id: "22", name: "Diego Saouda", rating: 7 },
+                { id: "23", name: "Claudinei", rating: 5 },
+                { id: "24", name: "Matheus", rating: 7 },
+                { id: "25", name: "Claúdio", rating: 4 },
+                { id: "26", name: "Breno", rating: 6 },
+                { id: "27", name: "Daniel Cardoso", rating: 9 },
+                { id: "28", name: "Samir", rating: 5 },
+                { id: "29", name: "Leandro 127", rating: 7 },
+                { id: "30", name: "Pedro Henrique", rating: 7 },
+                { id: "31", name: "Idemar", rating: 7 },
+    ];
 
     // Initialize
     loadPlayers();
     updatePlayersTable();
     updateTeamsWarning();
+    updatePlayerSelectionList();
 
     // Event Listeners
     tabButtons.forEach(button => {
@@ -41,6 +87,26 @@ document.addEventListener('DOMContentLoaded', function() {
     generateTeamsBtn.addEventListener('click', generateTeams);
 
     clearTeamsBtn.addEventListener('click', clearTeams);
+
+    resetPlayersBtn.addEventListener('click', () => {
+        confirmModal.classList.add('show');
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+        confirmModal.classList.remove('show');
+    });
+
+    cancelResetBtn.addEventListener('click', () => {
+        confirmModal.classList.remove('show');
+    });
+
+    confirmResetBtn.addEventListener('click', () => {
+        resetPlayers();
+        confirmModal.classList.remove('show');
+    });
+
+    selectAllBtn.addEventListener('click', selectAllPlayers);
+    deselectAllBtn.addEventListener('click', deselectAllPlayers);
 
     // Functions
     function switchTab(tabName) {
@@ -75,9 +141,15 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         players.push(player);
+        // Also select the new player by default
+        selectedPlayerIds.push(player.id);
+        
         savePlayers();
+        saveSelectedPlayers();
         updatePlayersTable();
         updateTeamsWarning();
+        updatePlayerSelectionList();
+        updateSelectedCount();
 
         playerNameInput.value = '';
         playerRatingInput.value = '5';
@@ -89,9 +161,16 @@ document.addEventListener('DOMContentLoaded', function() {
     function removePlayer(id) {
         const playerToRemove = players.find(p => p.id === id);
         players = players.filter(player => player.id !== id);
+        
+        // Also remove from selected players if present
+        selectedPlayerIds = selectedPlayerIds.filter(playerId => playerId !== id);
+        
         savePlayers();
+        saveSelectedPlayers();
         updatePlayersTable();
         updateTeamsWarning();
+        updatePlayerSelectionList();
+        updateSelectedCount();
 
         if (playerToRemove) {
             showToast('Jogador removido', `${playerToRemove.name} foi removido da lista.`);
@@ -146,7 +225,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateTeamsWarning() {
         warningContainer.innerHTML = '';
         
-        if (players.length < 10) {
+        const selectedCount = selectedPlayerIds.length;
+        
+        if (selectedCount < 10) {
             const alert = document.createElement('div');
             alert.className = 'alert alert-destructive';
             alert.innerHTML = `
@@ -154,8 +235,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div>
                     <div class="alert-title">Atenção</div>
                     <div class="alert-message">
-                        São necessários pelo menos 10 jogadores para formar 2 times.
-                        Atualmente há ${players.length} jogadores cadastrados.
+                        São necessários pelo menos 10 jogadores selecionados para formar 2 times.
+                        Atualmente há ${selectedCount} jogadores selecionados.
                     </div>
                 </div>
             `;
@@ -167,8 +248,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function generateTeams() {
-        if (players.length < 10) {
-            showToast('Jogadores insuficientes', 'São necessários pelo menos 10 jogadores para formar 2 times.', 'error');
+        if (selectedPlayerIds.length < 10) {
+            showToast('Jogadores insuficientes', 'São necessários pelo menos 10 jogadores selecionados para formar 2 times.', 'error');
             return;
         }
 
@@ -177,7 +258,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Add a small delay to show loading state
         setTimeout(() => {
-            teams = generateBalancedTeams([...players]);
+            // Get only selected players
+            const selectedPlayers = players.filter(player => selectedPlayerIds.includes(player.id));
+            teams = generateBalancedTeams(selectedPlayers);
             renderTeams();
             
             generateTeamsBtn.textContent = 'Gerar Times';
@@ -186,9 +269,6 @@ document.addEventListener('DOMContentLoaded', function() {
             clearTeamsBtn.style.display = 'block';
             
             showToast('Times gerados com sucesso!', `${teams.length} times balanceados foram criados.`);
-            
-            // Switch to teams tab
-            switchTab('teams');
         }, 800);
     }
 
@@ -418,40 +498,118 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('players', JSON.stringify(players));
     }
 
+    function saveSelectedPlayers() {
+        localStorage.setItem('selectedPlayerIds', JSON.stringify(selectedPlayerIds));
+    }
+
     function loadPlayers() {
         const savedPlayers = localStorage.getItem('players');
         if (savedPlayers) {
             players = JSON.parse(savedPlayers);
         } else {
             // Default players if none exist
-            players = [
-                { id: "1", name: "Jhonata", rating: 5 },
-                { id: "2", name: "Danilo", rating: 6 },
-                { id: "3", name: "Jack", rating: 6 },
-                { id: "4", name: "Bruno", rating: 4 },
-                { id: "5", name: "Lucas Ferreira", rating: 5 },
-                { id: "6", name: "Tio Nelson", rating: 4 },
-                { id: "7", name: "Luizão", rating: 5 },
-                { id: "8", name: "Gabriel", rating: 9 },
-                { id: "9", name: "Haroldo", rating: 6 },
-                { id: "10", name: "Edilson", rating: 5 }, // nao sei
-                { id: "11", name: "Vini", rating: 6 }, 
-                { id: "12", name: "Douglas", rating: 8 },
-                { id: "13", name: "Diego Mariano", rating: 9 },
-                { id: "14", name: "Enzo", rating: 7 },
-                { id: "15", name: "Wesley", rating: 8.5 },
-                { id: "16", name: "Kaue", rating: 7 },
-                { id: "17", name: "Leo", rating: 6 },
-                { id: "18", name: "Valdinei", rating: 9 },
-                { id: "19", name: "Felipe Dias", rating: 7 },
-                { id: "20", name: "Samurai", rating: 9 },
-                { id: "21", name: "Murilo", rating: 8.5 },
-                { id: "22", name: "Diego Saouda", rating: 7 },
-                { id: "23", name: "Claudinei", rating: 5 },
-                { id: "24", name: "Matheus", rating: 7 },
-                { id: "25", name: "Claúdio", rating: 4 },
-            ];
+            players = [...defaultPlayers];
             savePlayers();
         }
+
+        // Load selected players
+        const savedSelectedPlayerIds = localStorage.getItem('selectedPlayerIds');
+        if (savedSelectedPlayerIds) {
+            selectedPlayerIds = JSON.parse(savedSelectedPlayerIds);
+        } else {
+            // By default, select all players
+            selectedPlayerIds = players.map(player => player.id);
+            saveSelectedPlayers();
+        }
+    }
+
+    function resetPlayers() {
+        players = [...defaultPlayers];
+        savePlayers();
+        
+        // Select all players by default
+        selectedPlayerIds = players.map(player => player.id);
+        saveSelectedPlayers();
+        
+        updatePlayersTable();
+        updatePlayerSelectionList();
+        updateTeamsWarning();
+        updateSelectedCount();
+        
+        showToast('Lista resetada', 'A lista de jogadores foi resetada para os valores padrão.');
+    }
+
+    function updatePlayerSelectionList() {
+        playerSelectionList.innerHTML = '';
+        
+        if (players.length === 0) {
+            const emptyMessage = document.createElement('p');
+            emptyMessage.className = 'text-center muted';
+            emptyMessage.textContent = 'Nenhum jogador cadastrado';
+            playerSelectionList.appendChild(emptyMessage);
+            return;
+        }
+        
+        // Sort players by name for selection list
+        const sortedPlayers = [...players].sort((a, b) => a.name.localeCompare(b.name));
+        
+        sortedPlayers.forEach(player => {
+            const checkboxItem = document.createElement('label');
+            checkboxItem.className = 'player-checkbox-item';
+            
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.value = player.id;
+            checkbox.checked = selectedPlayerIds.includes(player.id);
+            checkbox.addEventListener('change', () => togglePlayerSelection(player.id));
+            
+            const label = document.createElement('span');
+            label.className = 'player-checkbox-label';
+            label.textContent = player.name;
+            
+            const rating = document.createElement('span');
+            rating.className = `player-checkbox-rating ${getRatingClass(player.rating)}`;
+            rating.textContent = player.rating;
+            
+            checkboxItem.appendChild(checkbox);
+            checkboxItem.appendChild(label);
+            checkboxItem.appendChild(rating);
+            
+            playerSelectionList.appendChild(checkboxItem);
+        });
+        
+        updateSelectedCount();
+    }
+
+    function togglePlayerSelection(playerId) {
+        if (selectedPlayerIds.includes(playerId)) {
+            selectedPlayerIds = selectedPlayerIds.filter(id => id !== playerId);
+        } else {
+            selectedPlayerIds.push(playerId);
+        }
+        
+        saveSelectedPlayers();
+        updateSelectedCount();
+        updateTeamsWarning();
+    }
+
+    function selectAllPlayers() {
+        selectedPlayerIds = players.map(player => player.id);
+        saveSelectedPlayers();
+        updatePlayerSelectionList();
+        updateSelectedCount();
+        updateTeamsWarning();
+    }
+
+    function deselectAllPlayers() {
+        selectedPlayerIds = [];
+        saveSelectedPlayers();
+        updatePlayerSelectionList();
+        updateSelectedCount();
+        updateTeamsWarning();
+    }
+
+    function updateSelectedCount() {
+        selectedCountDisplay.textContent = `${selectedPlayerIds.length} jogadores selecionados`;
     }
 });

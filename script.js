@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const defaultPlayers = [
         { id: "1", name: "Jhonata", rating: 5 },
                 { id: "2", name: "Danilo", rating: 6 },
-                { id: "3", name: "Jack", rating: 6 },
+                { id: "3", name: "Jack", rating: 7 },
                 { id: "4", name: "Bruno", rating: 4 },
                 { id: "5", name: "Lucas Ferreira", rating: 5 },
                 { id: "6", name: "Tio Nelson", rating: 4 },

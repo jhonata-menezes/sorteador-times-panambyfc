@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const selectedCount = selectedPlayerIds.length;
         
-        if (selectedCount < 10) {
+        if (selectedCount < 12) {
             const alert = document.createElement('div');
             alert.className = 'alert alert-destructive';
             alert.innerHTML = `
@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div>
                     <div class="alert-title">Atenção</div>
                     <div class="alert-message">
-                        São necessários pelo menos 10 jogadores selecionados para formar 2 times.
+                        São necessários pelo menos 12 jogadores selecionados para formar 2 times.
                         Atualmente há ${selectedCount} jogadores selecionados.
                     </div>
                 </div>
@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function generateTeams() {
-        if (selectedPlayerIds.length < 10) {
+        if (selectedPlayerIds.length < 12) {
             showToast('Jogadores insuficientes', 'São necessários pelo menos 10 jogadores selecionados para formar 2 times.', 'error');
             return;
         }
@@ -342,7 +342,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Sort players by rating (highest to lowest)
         availablePlayers.sort((a, b) => b.rating - a.rating);
         
-        const numTeams = Math.floor(availablePlayers.length / 5);
+        const numTeams = Math.floor(availablePlayers.length / 6);
         const teams = Array.from({ length: numTeams }, () => ({
             players: [],
             totalRating: 0,
@@ -355,7 +355,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let direction = 1; // 1 for forward, -1 for backward
         
         for (const player of availablePlayers) {
-            if (teams[teamIndex].players.length < 5) {
+            if (teams[teamIndex].players.length < 6) {
                 teams[teamIndex].players.push(player);
                 teams[teamIndex].totalRating += player.rating;
                 
